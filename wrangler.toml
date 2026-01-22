@@ -1,0 +1,19 @@
+name = "obeksplartform"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "obeks"
+database_id = "adddd965-2ac4-496c-b5c5-4b3294c04c07"
+
+[site]
+bucket = "./public"
+
+[vars]
+JWT_SECRET = "your-super-secret-jwt-key-change-in-production"
+SESSION_DURATION = "720h"
+OPENROUTER_API_URL = "https://openrouter.ai/api/v1"
+DEFAULT_AI_MODEL = "deepseek/deepseek-chat"
+PLATFORM_NAME = "Obeks AI"
