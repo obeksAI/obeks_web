@@ -1,0 +1,20 @@
+{
+  "name": "obeks-ai",
+  "version": "1.0.0",
+  "description": "AI Agent Platform with Cloudflare Workers and D1",
+  "main": "src/index.js",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "db:migrate": "wrangler d1 execute obeks-ai-db --file=./schema.sql",
+    "db:seed": "wrangler d1 execute obeks-ai-db --file=./seed.sql"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}
