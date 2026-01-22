@@ -8,9 +8,6 @@ binding = "DB"
 database_name = "obeks"
 database_id = "adddd965-2ac4-496c-b5c5-4b3294c04c07"
 
-[site]
-bucket = "./public"
-
 [vars]
 JWT_SECRET = "your-super-secret-jwt-key-change-in-production"
 SESSION_DURATION = "720h"
