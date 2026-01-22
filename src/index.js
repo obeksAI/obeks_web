@@ -691,25 +691,7 @@ function getHTML() {
 }
 
 // Dashboard HTML Generator Function (Add to your Worker code)
-function getDashboardHTML(userData = {}) {
-  // Default data if none provided
-  const data = {
-    user_ai: userData.user_ai || [],
-    active_ai_count: userData.active_ai_count || 0,
-    user_chat_count: userData.user_chat_count || 0,
-    user_db_count: userData.user_db_count || 0,
-    available_ai: userData.available_ai || [
-      { id: 'telegram', name: 'Telegram Bot', description: 'Customer support bot for Telegram' },
-      { id: 'whatsapp', name: 'WhatsApp Bot', description: 'Business messaging on WhatsApp' },
-      { id: 'website', name: 'Website AI', description: 'Add AI to your website' },
-      { id: 'security', name: 'Cyber Security', description: 'Security analysis and monitoring' },
-      { id: 'ecommerce', name: 'E-Commerce', description: 'AI-powered online stores' },
-      { id: 'facebook', name: 'Facebook', description: 'Social media management' },
-      { id: 'instagram', name: 'Instagram', description: 'Instagram content and engagement' }
-    ],
-    request: { host_url: 'https://your-worker.workers.dev/' }
-  };
-
+function getDashboardHTML() {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -723,15 +705,18 @@ function getDashboardHTML(userData = {}) {
         :root {
             --primary-blue: #1f52dc;
             --secondary-blue: #38bdf8;
+            --dark-bg: #0f172a;
+            --card-bg: #1e293b;
         }
         
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
+            background-color: var(--dark-bg);
+            color: white;
             overflow-x: hidden;
         }
         
-        /* Sidebar styling */
+        /* Sidebar */
         .sidebar {
             background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
             color: white;
@@ -747,8 +732,11 @@ function getDashboardHTML(userData = {}) {
         .main-content {
             margin-left: 280px;
             padding: 20px;
+            background: var(--dark-bg);
+            min-height: 100vh;
         }
         
+        /* Mobile responsiveness */
         @media (max-width: 992px) {
             .sidebar {
                 left: -280px;
@@ -768,7 +756,7 @@ function getDashboardHTML(userData = {}) {
             }
         }
         
-        /* Add your existing CSS styles here */
+        /* Mobile Header */
         .mobile-header {
             background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
             color: white;
@@ -781,26 +769,32 @@ function getDashboardHTML(userData = {}) {
             display: none;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         
+        /* Cards */
         .ai-card {
             transition: transform 0.2s, box-shadow 0.2s;
             border: none;
             border-radius: 1rem;
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            background: var(--card-bg);
+            color: white;
         }
         
         .ai-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            box-shadow: 0 0.5rem 1rem rgba(0, 102, 255, 0.3);
         }
         
         .stats-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 1rem;
             padding: 1.5rem;
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
             text-align: center;
+            color: white;
+            border: 1px solid rgba(56, 189, 248, 0.2);
         }
         
         .badge-online {
@@ -810,124 +804,224 @@ function getDashboardHTML(userData = {}) {
         .badge-offline {
             background: linear-gradient(135deg, #dc3545, #fd7e14);
         }
+        
+        /* Glass effect for cards */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+        
+        /* Input styling */
+        .input-field {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: white;
+        }
+        
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--secondary-blue);
+            color: white;
+            box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25);
+        }
+        
+        /* Button styling */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--secondary-blue) 0%, var(--primary-blue) 100%);
+            transform: translateY(-2px);
+        }
+        
+        /* Watery tabs effect */
+        .nav-tabs-watery .nav-link {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-tabs-watery .nav-link.active {
+            background: rgba(56, 189, 248, 0.1);
+            color: white;
+            border-bottom: 2px solid var(--secondary-blue);
+        }
+        
+        .nav-tabs-watery .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--secondary-blue), transparent);
+            transition: left 0.3s;
+        }
+        
+        .nav-tabs-watery .nav-link:hover::after {
+            left: 100%;
+        }
+        
+        /* Animation for cards */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .float-animation {
+            animation: float 5s ease-in-out infinite;
+        }
+        
+        /* Loading spinner */
+        .spinner-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            display: none;
+        }
     </style>
 </head>
 
 <body>
+    <!-- Loading Spinner -->
+    <div class="spinner-overlay" id="loadingSpinner">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+    </div>
+    
     <!-- Mobile Header -->
     <div class="mobile-header" id="mobileHeader">
-        <button class="hamburger-btn" id="hamburgerBtn">
+        <button class="hamburger-btn" id="hamburgerBtn" type="button">
             <i class="bi bi-list"></i>
         </button>
         <h4 class="mb-0">Obeks AI</h4>
         <div style="width: 40px"></div>
     </div>
     
-    <!-- Sidebar Overlay -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    
-    <!-- Sidebar Navigation -->
+    <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-        <div class="sidebar-brand">
-            <h4 class="mb-0">Obeks AI</h4>
+        <div class="sidebar-brand p-4">
+            <h3 class="mb-0">Obeks AI</h3>
             <small class="text-white-50">AI Agent Management</small>
         </div>
         
-        <nav class="sidebar-nav">
-            <a class="nav-link active" href="#" id="dashboardLink">
-                <i class="bi bi-speedometer2"></i>Dashboard
+        <nav class="sidebar-nav p-3">
+            <a class="nav-link active mb-2" href="#" id="dashboardLink">
+                <i class="bi bi-speedometer2 me-2"></i>Dashboard
             </a>
-            <a class="nav-link" href="#" id="apiSettingsLink">
-                <i class="bi bi-key"></i>API Settings
+            <a class="nav-link mb-2" href="#" id="apiSettingsLink">
+                <i class="bi bi-key me-2"></i>API Settings
             </a>
-            <a class="nav-link" href="#" id="chatHistoryLink">
-                <i class="bi bi-chat-dots"></i>Chat History
+            <a class="nav-link mb-2" href="#" id="chatHistoryLink">
+                <i class="bi bi-chat-dots me-2"></i>Chat History
             </a>
-            <a class="nav-link" href="#" id="dataLink">
-                <i class="bi bi-server"></i>My Data
+            <a class="nav-link mb-2" href="#" id="dataLink">
+                <i class="bi bi-server me-2"></i>My Data
             </a>
-            <a class="nav-link" href="#" id="apiDocsLink">
-                <i class="bi bi-file-earmark-text"></i>API Documentation
+            <a class="nav-link mb-2" href="#" id="apiDocsLink">
+                <i class="bi bi-file-earmark-text me-2"></i>API Docs
             </a>
             
-            <!-- Logout Button -->
-            <a class="nav-link" href="#" id="logoutLink">
-                <i class="bi bi-box-arrow-right"></i>Logout
-            </a>
+            <div class="mt-4 pt-3 border-top">
+                <a class="nav-link text-warning" href="#" id="supportLink">
+                    <i class="bi bi-question-circle me-2"></i>Support
+                </a>
+                <a class="nav-link text-danger" href="#" id="logoutLink">
+                    <i class="bi bi-box-arrow-right me-2"></i>Logout
+                </a>
+            </div>
         </nav>
     </div>
     
     <!-- Main Content -->
     <div class="main-content" id="mainContent">
-        <!-- Header Content -->
+        <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="mb-1">Welcome to Obeks AI</h2>
                 <span class="text-muted">Manage your AI agents in one place</span>
             </div>
             <div class="d-none d-md-block">
-                <span class="badge bg-primary" id="activeAgentsBadge">Active Agents: ${data.active_ai_count}</span>
+                <span class="badge bg-primary" id="activeAgentsBadge">Active Agents: 0</span>
             </div>
         </div>
         
         <!-- Quick Stats -->
         <div class="row mb-4" id="quickStats">
-            <div class="col-6 col-md-3 mb-3">
-                <div class="stats-card">
-                    <i class="bi bi-robot fs-1 text-primary mb-2"></i>
-                    <h3 id="totalAgents">${data.user_ai.length}</h3>
-                    <p class="text-muted mb-0">Total Agents</p>
-                </div>
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-                <div class="stats-card">
-                    <i class="bi bi-chat-dots fs-1 text-success mb-2"></i>
-                    <h3 id="totalConversations">${data.user_chat_count}</h3>
-                    <p class="text-muted mb-0">Conversations</p>
-                </div>
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-                <div class="stats-card">
-                    <i class="bi bi-activity fs-1 text-warning mb-2"></i>
-                    <h3 id="activeAgents">${data.active_ai_count}</h3>
-                    <p class="text-muted mb-0">Active Now</p>
-                </div>
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-                <div class="stats-card">
-                    <i class="bi bi-server fs-1 text-info mb-2"></i>
-                    <h3 id="databasesCount">${data.user_db_count}</h3>
-                    <p class="text-muted mb-0">Data Loaded</p>
-                </div>
-            </div>
+            <!-- Stats will be loaded via JavaScript -->
         </div>
         
-        <!-- Your AI Workforce Section -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">Your AI Workforce</h5>
-                        <span class="badge bg-primary">${data.user_ai.length} Agents</span>
-                    </div>
-                    <div class="card-body" id="aiWorkforceContainer">
-                        ${renderAIWorkforce(data.user_ai)}
+        <!-- AI Workforce -->
+        <div class="card glass-card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Your AI Workforce</h5>
+                <button class="btn btn-primary btn-sm" onclick="showAddAgentModal()">
+                    <i class="bi bi-plus-circle"></i> Add Agent
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="row" id="aiWorkforceContainer">
+                    <!-- AI agents will be loaded here -->
+                    <div class="text-center py-5">
+                        <i class="bi bi-robot fs-1 text-muted mb-3"></i>
+                        <p class="text-muted">No AI agents yet</p>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Add AI Section -->
-        <div class="row" id="add-ai-section">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header bg-white">
-                        <h5 class="card-title mb-0">Add AI Agent</h5>
+        <!-- Add Agent Modal -->
+        <div class="modal fade" id="addAgentModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content bg-dark text-white">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add AI Agent</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
-                    <div class="card-body">
-                        <div class="row" id="availableAIContainer">
-                            ${renderAvailableAI(data.available_ai)}
+                    <div class="modal-body">
+                        <div class="row" id="availableAgentsGrid">
+                            <!-- Available agents will be loaded here -->
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Telegram Setup Modal -->
+        <div class="modal fade" id="telegramModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content bg-dark text-white">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Setup Telegram Bot</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="telegramForm" onsubmit="return false;">
+                            <input type="hidden" id="telegramAgentId">
+                            <div class="mb-3">
+                                <label class="form-label">Telegram Bot Token</label>
+                                <input type="text" class="form-control input-field" id="telegramToken" 
+                                       placeholder="Enter bot token from @BotFather" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Webhook URL</label>
+                                <input type="text" class="form-control input-field" id="webhookUrl" readonly>
+                            </div>
+                            <button type="button" class="btn btn-primary w-100" onclick="setupTelegramBot()">
+                                Setup Webhook
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -939,226 +1033,331 @@ function getDashboardHTML(userData = {}) {
     
     <!-- Dashboard JavaScript -->
     <script>
-        // DOM Ready
+        // Global variables
+        let currentUser = null;
+        let agents = [];
+        
+        // DOM Ready - FIXED: No auto-reload
         document.addEventListener('DOMContentLoaded', function() {
-            // Sidebar functionality
-            const hamburgerBtn = document.getElementById('hamburgerBtn');
-            const sidebar = document.getElementById('sidebar');
-            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            console.log('Dashboard initialized');
             
-            if (hamburgerBtn) {
-                hamburgerBtn.addEventListener('click', function() {
-                    sidebar.classList.toggle('open');
-                    sidebarOverlay.classList.toggle('active');
-                });
-            }
+            // Check authentication
+            checkAuth();
             
-            if (sidebarOverlay) {
-                sidebarOverlay.addEventListener('click', function() {
-                    sidebar.classList.remove('open');
-                    sidebarOverlay.classList.remove('active');
-                });
-            }
+            // Initialize sidebar
+            initSidebar();
             
-            // Navigation Links
-            document.getElementById('dashboardLink').addEventListener('click', function(e) {
-                e.preventDefault();
-                loadDashboard();
-            });
-            
-            document.getElementById('apiSettingsLink').addEventListener('click', function(e) {
-                e.preventDefault();
-                loadAPISettings();
-            });
-            
-            document.getElementById('chatHistoryLink').addEventListener('click', function(e) {
-                e.preventDefault();
-                loadChatHistory();
-            });
-            
-            document.getElementById('dataLink').addEventListener('click', function(e) {
-                e.preventDefault();
-                loadMyData();
-            });
-            
-            document.getElementById('apiDocsLink').addEventListener('click', function(e) {
-                e.preventDefault();
-                loadAPIDocs();
-            });
-            
-            document.getElementById('logoutLink').addEventListener('click', function(e) {
-                e.preventDefault();
-                logout();
-            });
-            
-            // Initialize
+            // Load dashboard data
             loadDashboardData();
+            
+            // Load available agents for modal
+            loadAvailableAgents();
         });
         
-        // API Functions
+        // Check authentication
+        async function checkAuth() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+            
+            try {
+                currentUser = JSON.parse(localStorage.getItem('user'));
+                console.log('User authenticated:', currentUser?.username);
+            } catch (e) {
+                localStorage.clear();
+                window.location.href = '/login';
+            }
+        }
+        
+        // Initialize sidebar - FIXED: Prevent default behavior
+        function initSidebar() {
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (hamburgerBtn && sidebar) {
+                hamburgerBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    sidebar.classList.toggle('open');
+                });
+            }
+            
+            // Navigation links - FIXED: Prevent page reload
+            const navLinks = ['dashboardLink', 'apiSettingsLink', 'chatHistoryLink', 
+                            'dataLink', 'apiDocsLink', 'supportLink', 'logoutLink'];
+            
+            navLinks.forEach(linkId => {
+                const link = document.getElementById(linkId);
+                if (link) {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        switch(linkId) {
+                            case 'dashboardLink':
+                                loadDashboardData();
+                                break;
+                            case 'apiSettingsLink':
+                                loadAPISettings();
+                                break;
+                            case 'chatHistoryLink':
+                                loadChatHistory();
+                                break;
+                            case 'dataLink':
+                                loadMyData();
+                                break;
+                            case 'apiDocsLink':
+                                loadAPIDocs();
+                                break;
+                            case 'supportLink':
+                                showSupport();
+                                break;
+                            case 'logoutLink':
+                                logout();
+                                break;
+                        }
+                    });
+                }
+            });
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth < 992) {
+                    const sidebar = document.getElementById('sidebar');
+                    const hamburgerBtn = document.getElementById('hamburgerBtn');
+                    
+                    if (sidebar && hamburgerBtn && 
+                        !sidebar.contains(e.target) && 
+                        !hamburgerBtn.contains(e.target)) {
+                        sidebar.classList.remove('open');
+                    }
+                }
+            });
+        }
+        
+        // Show loading spinner
+        function showLoading() {
+            document.getElementById('loadingSpinner').style.display = 'flex';
+        }
+        
+        // Hide loading spinner
+        function hideLoading() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+        
+        // Load dashboard data - FIXED: No page reload
         async function loadDashboardData() {
+            showLoading();
             try {
                 const token = localStorage.getItem('token');
-                if (!token) {
-                    window.location.href = '/';
-                    return;
-                }
-                
                 const response = await fetch('/api/dashboard', {
                     headers: {
                         'Authorization': 'Bearer ' + token
                     }
                 });
                 
+                if (response.status === 401) {
+                    logout();
+                    return;
+                }
+                
                 if (response.ok) {
                     const data = await response.json();
                     updateDashboard(data);
+                    agents = data.ai_workforce || [];
                 } else {
-                    console.error('Failed to load dashboard data');
+                    console.error('Failed to load dashboard');
                 }
             } catch (error) {
-                console.error('Error loading dashboard:', error);
+                console.error('Error:', error);
+            } finally {
+                hideLoading();
             }
         }
         
+        // Update dashboard UI
         function updateDashboard(data) {
-            document.getElementById('totalAgents').textContent = data.total_agents || 0;
-            document.getElementById('totalConversations').textContent = data.total_conversations || 0;
-            document.getElementById('activeAgents').textContent = data.active_agents || 0;
-            document.getElementById('databasesCount').textContent = data.databases_count || 0;
-            document.getElementById('activeAgentsBadge').textContent = 'Active Agents: ' + (data.active_agents || 0);
+            // Update quick stats
+            const statsHtml = \`
+                <div class="col-6 col-md-3 mb-3">
+                    <div class="stats-card float-animation">
+                        <i class="bi bi-robot fs-1 text-primary mb-2"></i>
+                        <h3>\${data.total_agents || 0}</h3>
+                        <p class="text-muted mb-0">Total Agents</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <div class="stats-card float-animation">
+                        <i class="bi bi-chat-dots fs-1 text-success mb-2"></i>
+                        <h3>\${data.total_conversations || 0}</h3>
+                        <p class="text-muted mb-0">Conversations</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <div class="stats-card float-animation">
+                        <i class="bi bi-activity fs-1 text-warning mb-2"></i>
+                        <h3>\${data.active_agents || 0}</h3>
+                        <p class="text-muted mb-0">Active Now</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <div class="stats-card float-animation">
+                        <i class="bi bi-server fs-1 text-info mb-2"></i>
+                        <h3>\${data.databases_count || 0}</h3>
+                        <p class="text-muted mb-0">Data Loaded</p>
+                    </div>
+                </div>
+            \`;
             
-            if (data.ai_workforce) {
-                document.getElementById('aiWorkforceContainer').innerHTML = renderAIWorkforce(data.ai_workforce);
-            }
+            document.getElementById('quickStats').innerHTML = statsHtml;
+            document.getElementById('activeAgentsBadge').textContent = \`Active Agents: \${data.active_agents || 0}\`;
+            
+            // Update AI workforce
+            renderAIWorkforce(data.ai_workforce || []);
         }
         
-        async function loadAPISettings() {
-            // Load API settings page
-            const mainContent = document.getElementById('mainContent');
-            mainContent.innerHTML = '<h2>API Settings - Coming Soon</h2>';
-        }
-        
-        async function loadChatHistory() {
-            // Load chat history
-            const mainContent = document.getElementById('mainContent');
-            mainContent.innerHTML = '<h2>Chat History - Coming Soon</h2>';
-        }
-        
-        async function loadMyData() {
-            // Load My Data page
-            const mainContent = document.getElementById('mainContent');
-            mainContent.innerHTML = '<h2>My Data - Coming Soon</h2>';
-        }
-        
-        async function loadAPIDocs() {
-            // Load API Documentation
-            const mainContent = document.getElementById('mainContent');
-            mainContent.innerHTML = '<h2>API Documentation - Coming Soon</h2>';
-        }
-        
-        function loadDashboard() {
-            window.location.reload();
-        }
-        
-        async function logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.href = '/';
-        }
-        
-        // Render functions
+        // Render AI workforce
         function renderAIWorkforce(agents) {
+            const container = document.getElementById('aiWorkforceContainer');
+            
             if (!agents || agents.length === 0) {
-                return \`
+                container.innerHTML = \`
                     <div class="text-center py-5">
                         <i class="bi bi-robot fs-1 text-muted mb-3"></i>
-                        <p class="text-muted">You haven't added any AI workforce yet.</p>
-                        <a href="#add-ai-section" class="btn btn-primary">Add Your First AI</a>
+                        <p class="text-muted">No AI agents yet</p>
+                        <button class="btn btn-primary" onclick="showAddAgentModal()">
+                            Add Your First AI
+                        </button>
                     </div>
                 \`;
+                return;
             }
             
-            return agents.map(agent => \`
+            const html = agents.map(agent => \`
                 <div class="col-12 col-md-6 col-lg-4 mb-3">
                     <div class="card ai-card h-100">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h5 class="card-title">\${agent.name || 'Unnamed Agent'}</h5>
+                                <h5 class="card-title">\${agent.name || 'Unnamed'}</h5>
                                 <span class="badge \${agent.status === 'active' ? 'badge-online' : 'badge-offline'}">
                                     \${agent.status || 'inactive'}
                                 </span>
                             </div>
                             <h6 class="card-subtitle mb-2 text-muted">
-                                <i class="bi bi-\${agent.type || 'robot'} me-1"></i>
-                                \${agent.type || 'AI Agent'}
+                                <i class="bi bi-\${getAgentIcon(agent.agent_type)} me-1"></i>
+                                \${formatAgentType(agent.agent_type)}
                             </h6>
-                            <p class="card-text small">\${agent.description || 'No description available'}</p>
+                            <p class="card-text small">Created: \${formatDate(agent.created_at)}</p>
                             
-                            <!-- Agent-specific configurations -->
-                            \${renderAgentConfig(agent)}
-                            
-                            <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
-                                <small class="text-muted">\${agent.created_at ? agent.created_at.substring(0, 10) : 'N/A'}</small>
-                                <a href="#" class="text-danger" onclick="deleteAgent('\${agent.id}')">
-                                    <i class="bi bi-trash"></i>
-                                </a>
-                            </div>
+                            \${renderAgentActions(agent)}
                         </div>
                     </div>
                 </div>
             \`).join('');
+            
+            container.innerHTML = html;
+            container.classList.remove('text-center', 'py-5');
+            container.classList.add('row');
         }
         
-        function renderAgentConfig(agent) {
-            if (agent.type === 'telegram') {
+        // Get agent icon
+        function getAgentIcon(type) {
+            const icons = {
+                'telegram_bot': 'telegram',
+                'whatsapp': 'whatsapp',
+                'website': 'globe',
+                'security': 'shield-check',
+                'ecommerce': 'cart',
+                'facebook': 'facebook',
+                'instagram': 'instagram'
+            };
+            return icons[type] || 'robot';
+        }
+        
+        // Format agent type
+        function formatAgentType(type) {
+            return type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+        
+        // Format date
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            return new Date(dateString).toLocaleDateString();
+        }
+        
+        // Render agent actions
+        function renderAgentActions(agent) {
+            if (agent.agent_type === 'telegram_bot') {
                 return \`
-                    <div class="mb-2">
-                        <small class="text-muted d-block mb-1">Webhook URL:</small>
-                        <input type="text" class="form-control form-control-sm" 
-                               value="\${window.location.origin}/api/webhook/telegram/\${agent.id}" 
-                               readonly onclick="this.select()">
+                    <div class="mt-3">
+                        <button class="btn btn-outline-primary btn-sm w-100" 
+                                onclick="setupTelegramAgent('\${agent.id}')">
+                            \${agent.telegram_bot_token ? 'Reconfigure' : 'Setup'} Telegram
+                        </button>
+                        \${agent.telegram_bot_token ? \`
+                            <small class="text-success d-block mt-1">
+                                <i class="bi bi-check-circle"></i> Configured
+                            </small>
+                        \` : ''}
                     </div>
-                    <form onsubmit="setupTelegramAgent(event, '\${agent.id}')">
-                        <div class="input-group input-group-sm mb-2">
-                            <input type="text" class="form-control" 
-                                   placeholder="Telegram Bot Token" 
-                                   id="token-\${agent.id}" required>
-                            <button class="btn btn-outline-primary" type="submit">Set Webhook</button>
-                        </div>
-                    </form>
                 \`;
             }
-            // Add other agent types here
-            return '';
+            
+            return \`
+                <div class="mt-3">
+                    <button class="btn btn-outline-secondary btn-sm w-100" disabled>
+                        Coming Soon
+                    </button>
+                </div>
+            \`;
         }
         
-        function renderAvailableAI(availableAI) {
-            return availableAI.map(ai => \`
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-                    <div class="card ai-card h-100 text-center">
+        // Load available agents
+        async function loadAvailableAgents() {
+            const availableAgents = [
+                { id: 'telegram_bot', name: 'Telegram Bot', description: 'Customer support bot for Telegram', icon: 'telegram' },
+                { id: 'whatsapp', name: 'WhatsApp Bot', description: 'Business messaging on WhatsApp', icon: 'whatsapp' },
+                { id: 'website', name: 'Website AI', description: 'Add AI to your website', icon: 'globe' },
+                { id: 'security', name: 'Security AI', description: 'Cyber security analysis', icon: 'shield-check' },
+                { id: 'ecommerce', name: 'E-Commerce', description: 'AI-powered online stores', icon: 'cart' },
+                { id: 'facebook', name: 'Facebook', description: 'Social media management', icon: 'facebook' },
+                { id: 'instagram', name: 'Instagram', description: 'Instagram content', icon: 'instagram' }
+            ];
+            
+            const container = document.getElementById('availableAgentsGrid');
+            container.innerHTML = availableAgents.map(agent => \`
+                <div class="col-6 mb-3">
+                    <div class="card ai-card h-100 text-center" 
+                         onclick="addAgent('\${agent.id}', '\${agent.name}')"
+                         style="cursor: pointer;">
                         <div class="card-body">
                             <div class="mb-3" style="font-size: 2.5rem">
-                                <i class="bi bi-\${ai.id} text-primary"></i>
+                                <i class="bi bi-\${agent.icon} text-primary"></i>
                             </div>
-                            <h5 class="card-title">\${ai.name}</h5>
-                            <p class="card-text small text-muted">\${ai.description}</p>
-                            <button class="btn btn-primary btn-sm" onclick="addAgent('\${ai.id}')">
-                                Add Agent
-                            </button>
+                            <h6 class="card-title">\${agent.name}</h6>
+                            <p class="card-text small text-muted">\${agent.description}</p>
                         </div>
                     </div>
                 </div>
             \`).join('');
         }
         
-        // Agent Actions
-        async function addAgent(aiId) {
+        // Show add agent modal
+        function showAddAgentModal() {
+            const modal = new bootstrap.Modal(document.getElementById('addAgentModal'));
+            modal.show();
+        }
+        
+        // Add agent - FIXED: Prevent form submission
+        async function addAgent(agentType, agentName) {
+            const name = prompt(\`Enter a name for your \${agentName}:\`, \`My \${agentName}\`);
+            if (!name) return;
+            
+            showLoading();
             try {
                 const token = localStorage.getItem('token');
-                const name = prompt('Enter a name for your AI agent:');
-                if (!name) return;
-                
                 const response = await fetch('/api/agents/create', {
                     method: 'POST',
                     headers: {
@@ -1166,34 +1365,55 @@ function getDashboardHTML(userData = {}) {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        ai_type: aiId,
+                        ai_type: agentType,
                         name: name,
-                        description: 'AI Agent for ' + aiId
+                        description: \`AI Agent for \${agentName}\`
                     })
                 });
                 
+                const data = await response.json();
+                
                 if (response.ok) {
-                    alert('Agent added successfully!');
+                    // Close modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('addAgentModal'));
+                    modal.hide();
+                    
+                    // Show success
+                    showNotification('Agent added successfully!', 'success');
+                    
+                    // Reload dashboard
                     loadDashboardData();
                 } else {
-                    const error = await response.json();
-                    alert('Error: ' + (error.error || 'Failed to add agent'));
+                    showNotification(data.error || 'Failed to add agent', 'error');
                 }
             } catch (error) {
-                console.error('Error adding agent:', error);
-                alert('Network error. Please try again.');
+                console.error('Error:', error);
+                showNotification('Network error', 'error');
+            } finally {
+                hideLoading();
             }
         }
         
-        async function setupTelegramAgent(event, agentId) {
-            event.preventDefault();
-            const token = document.getElementById('token-' + agentId).value;
+        // Setup Telegram agent
+        function setupTelegramAgent(agentId) {
+            document.getElementById('telegramAgentId').value = agentId;
+            document.getElementById('webhookUrl').value = \`\${window.location.origin}/api/webhook/telegram/\${agentId}\`;
+            
+            const modal = new bootstrap.Modal(document.getElementById('telegramModal'));
+            modal.show();
+        }
+        
+        // Setup Telegram bot
+        async function setupTelegramBot() {
+            const agentId = document.getElementById('telegramAgentId').value;
+            const token = document.getElementById('telegramToken').value;
             
             if (!token) {
-                alert('Please enter a Telegram Bot Token');
+                showNotification('Please enter Telegram bot token', 'warning');
                 return;
             }
             
+            showLoading();
             try {
                 const userToken = localStorage.getItem('token');
                 const response = await fetch('/api/agents/telegram/setup', {
@@ -1208,81 +1428,96 @@ function getDashboardHTML(userData = {}) {
                     })
                 });
                 
+                const data = await response.json();
+                
                 if (response.ok) {
-                    alert('Telegram bot configured successfully!');
+                    // Close modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('telegramModal'));
+                    modal.hide();
+                    
+                    showNotification('Telegram bot configured successfully!', 'success');
+                    loadDashboardData();
                 } else {
-                    const error = await response.json();
-                    alert('Error: ' + (error.error || 'Failed to setup bot'));
+                    showNotification(data.error || 'Failed to setup bot', 'error');
                 }
             } catch (error) {
-                console.error('Error setting up Telegram:', error);
-                alert('Network error. Please try again.');
+                console.error('Error:', error);
+                showNotification('Network error', 'error');
+            } finally {
+                hideLoading();
             }
         }
         
-        async function deleteAgent(agentId) {
-            if (!confirm('Are you sure you want to delete this AI agent?')) {
-                return;
-            }
-            
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch('/api/agents/' + agentId, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    }
-                });
-                
-                if (response.ok) {
-                    alert('Agent deleted successfully!');
-                    loadDashboardData();
-                } else {
-                    const error = await response.json();
-                    alert('Error: ' + (error.error || 'Failed to delete agent'));
-                }
-            } catch (error) {
-                console.error('Error deleting agent:', error);
-                alert('Network error. Please try again.');
+        // Other page loaders
+        async function loadAPISettings() {
+            showNotification('API Settings page coming soon!', 'info');
+        }
+        
+        async function loadChatHistory() {
+            showNotification('Chat History page coming soon!', 'info');
+        }
+        
+        async function loadMyData() {
+            showNotification('My Data page coming soon!', 'info');
+        }
+        
+        async function loadAPIDocs() {
+            showNotification('API Documentation page coming soon!', 'info');
+        }
+        
+        function showSupport() {
+            alert('Support: Contact us at support@obeks.ai');
+        }
+        
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.clear();
+                window.location.href = '/login';
             }
         }
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            const existing = document.querySelector('.custom-notification');
+            if (existing) existing.remove();
+            
+            const alertClass = {
+                'success': 'alert-success',
+                'error': 'alert-danger',
+                'warning': 'alert-warning',
+                'info': 'alert-info'
+            }[type] || 'alert-info';
+            
+            const notification = \`
+                <div class="alert \${alertClass} alert-dismissible fade show custom-notification"
+                     style="position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px;">
+                    \${message}
+                    <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+                </div>
+            \`;
+            
+            document.body.insertAdjacentHTML('beforeend', notification);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                const notif = document.querySelector('.custom-notification');
+                if (notif) notif.remove();
+            }, 5000);
+        }
+        
+        // Prevent accidental refresh
+        window.addEventListener('beforeunload', function(e) {
+            if (document.getElementById('loadingSpinner').style.display === 'flex') {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
     </script>
 </body>
 </html>`;
 }
-
-// Helper function to render AI workforce
-function renderAIWorkforce(agents) {
-  if (!agents || agents.length === 0) {
-    return '<p>No AI agents yet</p>';
-  }
-  // Return HTML string
-  return agents.map(agent => `
-    <div class="col-12 col-md-6 col-lg-4 mb-3">
-      <div class="card ai-card">
-        <div class="card-body">
-          <h5>${agent.name}</h5>
-          <p>${agent.description || 'No description'}</p>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-// Helper function to render available AI
-function renderAvailableAI(availableAI) {
-  return availableAI.map(ai => `
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-      <div class="card ai-card">
-        <div class="card-body">
-          <h5>${ai.name}</h5>
-          <p>${ai.description}</p>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-
 
 function getLoginHTML() {
   return `<!DOCTYPE html>
